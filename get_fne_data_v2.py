@@ -55,5 +55,6 @@ def data_catcher():
         print('Vrijeme jedne operacije:{}'.format(t))
 
 if __name__ == '__main__':
+    data_catcher()
     sched.add_job(data_catcher, 'interval', minutes=5, max_instances=4)
     sched.start()
