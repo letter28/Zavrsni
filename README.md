@@ -5,10 +5,13 @@ The goal is a web application for graphical display of production data from a ph
 
 Currently:
 - the data retrieval and storage work as intended
+- the core dash app is working locally
+- added tabs: 1) one for viewing the data live (in progress)
+              2) the other for the table and download option (in progress)  
 
 The next steps in the project:
-- to set up the core app locally
+- add a table with data pulled from the db
 - graphical and textual representation of available data
 - graphical and textual representation of live data
-- add tabs: 1) one for viewing of data live
-            2) the other containing a table with data pulled from the db -> requested by the user (range option)
+- add feature of pulling the data from the db requested by the user (range option)
+
