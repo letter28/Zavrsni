@@ -1,11 +1,5 @@
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-This is a temporary script file.
-"""
-import time
-import datetime
+﻿import time
+import datetime as dtime
 import pandas as pd
 import pymysql as mysql
 import urllib
@@ -13,9 +7,12 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 sched = BlockingScheduler()
 
+'''Funkcija data_catcher, kada pozvana, dohvaca podatke sa stranice s podacima o proizvodnji
+fotonaponskog panela i sprema ih u SQL tablicu.'''
+
 def data_catcher():
     t0 = time.time()
-    my_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
+    my_time = dtime.datetime.now().strftime('%Y-%m-%d %H:%M')
     try:
         page1 = pd.read_html('http://161.53.40.111:6080/p1.html')
         page2 = pd.read_html('http://161.53.40.111:6080/p2.html')
@@ -32,7 +29,7 @@ def data_catcher():
         E_year = page3[1][1][3].split()
         E_total = page3[1][1][4].split()
         if int(ACpower[0]) == 0:
-            print('Nema sunca! Pokušat ću kasnije.')
+            print('Nema sunca! Pokusat cu kasnije.')
         else:
             db = mysql.connect(host='localhost', user='root', password='lozinka', db='riteh1')
             c = db.cursor()
@@ -43,11 +40,11 @@ def data_catcher():
             db.commit()
             db.close()
     except urllib.error.URLError:
-        print('Greška u povezivanju.')
+        print('Greska u povezivanju.')
     except TimeoutError:
         print('Veza sa serverom je istekla.')
     except ValueError:
-        print('Greška u manipulaciji s podacima.')
+        print('Greska u manipulaciji s podacima.')
     finally:
         t1 = time.time()
         t = t1 - t0
@@ -55,5 +52,6 @@ def data_catcher():
         print('Vrijeme jedne operacije:{}'.format(t))
 
 if __name__ == '__main__':
+    data_catcher()
     sched.add_job(data_catcher, 'interval', minutes=5, max_instances=4)
     sched.start()
