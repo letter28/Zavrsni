@@ -9,10 +9,10 @@ Currently:
 - added tabs: 1) one for viewing the data live (in progress)
               2) the other for the table (done) and download option (in progress)  
 - added a graph for viewing the AC and DC power output
+- added a table with data pulled from the db
+- added graphical and textual representation of available data
 
 The next steps in the project:
-- add a table with data pulled from the db
-- graphical and textual representation of available data
 - graphical and textual representation of live data
 - add feature of pulling the data from the db requested by the user (range option)
 
