@@ -11,6 +11,7 @@ Currently:
 - added a graph for viewing the AC and DC power output
 - added a table with data pulled from the db
 - added graphical and textual representation of available data
+- added some styling (background color, text colors, centering)
 
 The next steps in the project:
 - graphical and textual representation of live data
