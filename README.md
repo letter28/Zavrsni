@@ -6,14 +6,14 @@ The goal is a web application for graphical display of production data from a ph
 Currently:
 - the data retrieval and storage work as intended
 - the core dash app is working locally
-- added tabs: 1) one for viewing the data live (in progress)
+- added tabs: 1) one for viewing the data live (done)
               2) the other for the table (done) and download option (in progress)  
 - added a graph for viewing the AC and DC power output
 - added a table with data pulled from the db
-- added graphical and textual representation of available data
+- added graphical represantation of available data
 - added some styling (background color, text colors, centering)
+- added graphical and textual representation of live data
 
 The next steps in the project:
-- graphical and textual representation of live data
 - add feature of pulling the data from the db requested by the user (range option)
 
