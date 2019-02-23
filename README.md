@@ -13,7 +13,8 @@ Currently:
 - added graphical represantation of available data
 - added some styling (background color, text colors, centering)
 - added graphical and textual representation of live data
+- added date picker range for both graph and table data
 
 The next steps in the project:
-- add feature of pulling the data from the db requested by the user (range option)
+- add data download option
 
