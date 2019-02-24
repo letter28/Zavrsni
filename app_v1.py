@@ -15,7 +15,7 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div([
-                      html.H1('Fotonaponska elektrana FN1-Riteh: Podaci o proizvodnji', 
+                      html.H2('Fotonaponska elektrana FN1-Riteh: Podaci o proizvodnji', 
                               style={'color': 'rgb(255,255,255)',
                                      'text-align': 'center',
                                      'text-shadow':'1px 1px #000000'}),
@@ -25,19 +25,24 @@ app.layout = html.Div([
                                                                               dcc.Tab(label='Grafički prikaz prethodne proizvodnje', value='tab-1'),
                                                                               dcc.Tab(label='Tablica s podacima o proizvodnji (u doradi)', value='tab-2')
                                                                              ]),
-                      dcc.DatePickerRange(
-                                          id='my-date-picker-range',
-                                          min_date_allowed=dt(2019, 1, 1),
-                                          max_date_allowed=dt.now(),
-                                          initial_visible_month=dt(2019, 1, 2),
-                                          start_date='',
-                                          end_date=''
-                                         ),
+                      html.Div([
+                              html.H5('Odaberi vremenski raspon:', style={'color': 'rgb(255,255,255)'}),
+                              dcc.DatePickerRange(
+                                                  id='my-date-picker-range',
+                                                  min_date_allowed=dt(2019, 1, 1),
+                                                  max_date_allowed=dt.now(),
+                                                  initial_visible_month=dt(2019, 1, 2),
+                                                  start_date='2019-01-01',
+                                                  end_date='{}'.format(dt.now().date())
+                                                  )
+                              ]),
                       html.Div(id='tabs-content'),
                       dcc.Interval(id='my-interval', 
                                    interval=300*1000, 
-                                   n_intervals=0)
-                      ], style={'background':'rgb(0,146,184)'})
+                                   n_intervals=0),
+                      html.P('Izradio: Leon Kvež za Tehnički fakultet u Rijeci, veljača 2019.', style={'text-align':'right'})
+                      ], style={'background':'#4c4c4a',
+                                'font-family':"Verdana"})
 
 @app.callback(Output('live-update-text', 'children'),
               [Input('my-interval', 'n_intervals')])
@@ -49,22 +54,24 @@ def update_text(n):
     style={'color':'rgb(255,255,255)', 'text-align':'center'}
     t2 = time.time()
     print('Vremena za update teksta: {}'.format(t2-t1))
-    return html.Div([html.H3('Live podaci - 5-minutni korak:', style=style),
+    return html.Div([html.H4('Live podaci - 5-minutni korak:', style=style),
                     html.Div([
                              html.Div([
-                                      html.H6("Vrijeme: {}".format(df.iloc[-1,0]), style=style),
-                                      html.H6("Snaga AC: {}W".format(df.iloc[-1,2]), style=style),
-                                      html.H6("Snaga DC: {}W".format(df.iloc[-1,1]), style=style),
-                                      html.H6("Učinkovitost: {}%".format(df.iloc[-1,3]), style=style),
-                                      html.H6("Max. snaga danas: {}W".format(df.iloc[-1,4]), style=style),
-                                      html.H6("Frekvencija mreže: {}Hz".format(df.iloc[-1,5]), style=style),
-                                      html.H6("Temp. konverzije: {}°C".format(df.iloc[-1,6]), style=style)],className='six columns'),
+                                      html.P("Vrijeme: {}".format(df.iloc[-1,0]), style=style),
+                                      html.P("Snaga AC: {} W".format(df.iloc[-1,2]), style=style),
+                                      html.P("Snaga DC: {} W".format(df.iloc[-1,1]), style=style),
+                                      html.P("Učinkovitost: {}%".format(df.iloc[-1,3]), style=style),
+                                      html.P("Max. snaga danas: {} W".format(df.iloc[-1,4]), style=style),
+                                      html.P("Frekvencija mreže: {} Hz".format(df.iloc[-1,5]), style=style),
+                                      html.P("Temp. konvertera: {}°C".format(df.iloc[-1,6]), style=style)],className='six columns'),
                              html.Div([
-                                      html.H6("Energije danas: {}kW".format(df.iloc[-1,7]), style=style),
-                                      html.H6("Energije u tjednu: {}kW".format(df.iloc[-1,8]), style=style),
-                                      html.H6("Energije u mjesecu: {}kW".format(df.iloc[-1,9]), style=style),
-                                      html.H6("Energije u godini: {}kW".format(df.iloc[-1,10]), style=style),
-                                      html.H6("Energije ukupno: {}kW".format(df.iloc[-1,11]), style=style)], className='six columns')
+                                      html.P(' '),
+                                      html.P(' '),
+                                      html.P("Energije danas: {} kWh".format(df.iloc[-1,7]), style=style),
+                                      html.P("Energije u tjednu: {} kWh".format(df.iloc[-1,8]), style=style),
+                                      html.P("Energije u mjesecu: {} kWh".format(df.iloc[-1,9]), style=style),
+                                      html.P("Energije u godini: {} kWh".format(df.iloc[-1,10]), style=style),
+                                      html.P("Energije ukupno: {} kWh".format(df.iloc[-1,11]), style=style)], className='six columns')
                               ], className='row')
                     ])
             
@@ -79,33 +86,38 @@ def update_graph(n):
             'Snaga_AC':[],
             'Snaga_DC':[],
             'Temp_kon':[]}
-    for i in range(10):
+    for i in range(23):
         vrijeme = df.iloc[-(1+i),0]
         snaga_ac = df.iloc[-(1+i),2]
         snaga_dc = df.iloc[-(1+i),1]
-        ucin = df.iloc[-(1+i),6]
+        temp_kon = df.iloc[-(1+i),6]
         data['Vrijeme'].append(vrijeme)
         data['Snaga_AC'].append(snaga_ac)
         data['Snaga_DC'].append(snaga_dc)
-        data['Temp_kon'].append(ucin)
+        data['Temp_kon'].append(temp_kon)
     fig = plotly.tools.make_subplots(rows=2, cols=1, shared_xaxes=True)
     fig['layout']['legend'] = {'x': 1, 'y': 1, 'xanchor': 'left'}
     fig['layout']['xaxis1'].update(title='Vrijeme')
     fig['layout']['yaxis1'].update(title='Snaga [W]')
     fig['layout']['yaxis2'].update(title='Temperatura [°C]')
+    fig['layout']['height'] = 600
+    fig['layout']['title'] = {'text':'Snaga AC/DC, Temperatura konvertera'}
+    fig['layout']['plot_bgcolor'] = '#4c4c4a'
+    fig['layout']['paper_bgcolor'] = '#4c4c4a'
+    fig['layout']['font'] = {'color':'#e98400'}
     fig.append_trace({
         'x': data['Vrijeme'],
         'y': data['Snaga_AC'],
         'name': 'Snaga AC',
         'mode': 'lines+markers',
-        'type': 'scatter'
+        'type': 'scatter',
     }, 1, 1)
     fig.append_trace({
         'x': data['Vrijeme'],
         'y': data['Snaga_DC'],
         'name': 'Snaga DC',
         'mode': 'lines+markers',
-        'type': 'scatter'
+        'type': 'scatter',
     }, 1, 1)
     fig.append_trace({
         'x': data['Vrijeme'],
@@ -132,7 +144,8 @@ def render_content(tab, start_date, end_date):
                         html.H3('Testni prikaz sveukupne proizvodnje',
                                 style={'color':'rgb(255,255,255)',
                                        'text-shadow':'1px 1px #000000',
-                                       'text-align': 'center'}),
+                                       'text-align': 'center',
+                                       'font-family':"Verdana"}),
                         dcc.Graph(
                                  figure=go.Figure(
                                                  data=[
@@ -149,9 +162,12 @@ def render_content(tab, start_date, end_date):
                                                       ],
                                                  layout=go.Layout(
                                                                  title='Snaga (DC, AC)',
+                                                                 font=dict(color='#e98400'),
                                                                  showlegend=True,
                                                                  yaxis=dict(title='Snaga u W'),
-                                                                 xaxis=dict(title='Vrijeme')
+                                                                 xaxis=dict(title='Vrijeme'),
+                                                                 plot_bgcolor='#4c4c4a',
+                                                                 paper_bgcolor='#4c4c4a'
                                                                  )
                                                  ),
                                  style={'height': 550},
@@ -163,11 +179,27 @@ def render_content(tab, start_date, end_date):
                         html.H3('Podaci o prethodnoj proizvodnji',
                                 style={'color':'rgb(255,255,255)',
                                        'text-shadow':'1px 1px #000000',
-                                       'text-align': 'center'}),
+                                       'text-align': 'center',
+                                       'font-family':"Verdana"}),
                         dash_table.DataTable(
                                             id='table',
                                             columns=[{"name": i, "id": i} for i in df.columns],
-                                            data=df.to_dict("rows")
+                                            data=df.to_dict("rows"),
+                                            sorting=True,
+                                            style_cell={'textAlign': 'right',
+                                                        'color':'rgb(255,255,255)',
+                                                        'backgroundColor': '#4c4c4a'},
+                                            style_cell_conditional=[{'if': {'row_index': 'odd'},
+                                                                    'backgroundColor': '#5c5c5a'},
+                                                                    {'if': {'column_id': 'Vrijeme'},
+                                                                     'textAlign': 'center'},
+                                                                    ],
+                                            style_header={'backgroundColor': '#4c4c4a',
+                                                          'fontWeight': 'bold',
+                                                          'textAlign':'center'},
+                                            style_data={'whiteSpace': 'normal'},
+                                            css=[{'selector': '.dash-cell div.dash-cell-value',
+                                                  'rule': 'display: inline; white-space: inherit; overflow: inherit; text-overflow: inherit;'}]
                                             )                    
                         ])
 
