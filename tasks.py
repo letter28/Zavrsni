@@ -25,9 +25,9 @@ def update_data():
     print("----> update_data")
     my_time = dtime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     try:
-        page1 = pd.read_html('http://161.53.40.111:6080/p1.html')
-        page2 = pd.read_html('http://161.53.40.111:6080/p2.html')
-        page3 = pd.read_html('http://161.53.40.111:6080/p3.html')
+        page1 = pd.read_html(control_block_page)
+        page2 = pd.read_html(control_block_page)
+        page3 = pd.read_html(control_block_page)
         page4 = pd.read_html('http://meteo.hr/podaci.php?section=podaci_vrijeme&prikaz=abc')
         dfw = pd.DataFrame(page4[0])
         rijeka = dfw.loc[dfw['Postaja'] == 'Rijeka']
